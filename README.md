@@ -54,7 +54,7 @@ Saytdan chiqib, qayta kiring — menyuda **Admin** bo'limi paydo bo'ladi.
 | O'zgaruvchi | Vazifasi | Standart qiymat |
 |---|---|---|
 | `PORT` | Server porti | `3000` |
-| `JWT_SECRET` | Tokenlar uchun maxfiy kalit (internetga joylashda **albatta** o'rnating) | dev kalit |
+| `JWT_SECRET` | Tokenlar uchun maxfiy kalit | avtomatik yaratiladi (`data/jwt-secret`) |
 | `ADMIN_EMAIL` | Shu email egasi avtomatik admin bo'ladi | — |
 | `DB_PATH` | Ma'lumotlar bazasi fayli | `data/findback.db` |
 
