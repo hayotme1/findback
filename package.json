@@ -4,16 +4,15 @@
   "description": "FindBack — universitet uchun yo'qolgan va topilgan buyumlar platformasi (Lost & Found)",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
+    "start": "node --disable-warning=ExperimentalWarning server.js",
+    "dev": "node --disable-warning=ExperimentalWarning --watch server.js"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22.13"
   },
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "better-sqlite3": "^11.10.0",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.2"

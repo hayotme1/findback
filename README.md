@@ -19,13 +19,13 @@ Sayt o'zbek va ingliz tillarida ishlaydi.
 |---|---|
 | Frontend | HTML, CSS, JavaScript |
 | Backend | Node.js + Express |
-| Ma'lumotlar bazasi | SQLite (better-sqlite3) |
+| Ma'lumotlar bazasi | SQLite (Node.js'ga o'rnatilgan `node:sqlite`) |
 | Rasm yuklash | Multer |
 | Autentifikatsiya | bcryptjs + JSON Web Token |
 
 ## Ishga tushirish
 
-Kompyuterda [Node.js](https://nodejs.org) (18 yoki undan yangi versiya) o'rnatilgan bo'lishi kerak.
+Kompyuterda [Node.js](https://nodejs.org) (22.13 yoki undan yangi versiya) o'rnatilgan bo'lishi kerak.
 
 ```bash
 npm install

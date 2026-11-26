@@ -1,11 +1,12 @@
 const path = require('path');
-const Database = require('better-sqlite3');
+// Node.js'ga o'rnatilgan SQLite (Node 22.13+), alohida o'rnatish yoki kompilyatsiya talab qilmaydi
+const { DatabaseSync } = require('node:sqlite');
 
 const dbPath = process.env.DB_PATH || path.join(__dirname, 'data', 'findback.db');
-const db = new Database(dbPath);
+const db = new DatabaseSync(dbPath);
 
-db.pragma('journal_mode = WAL');
-db.pragma('foreign_keys = ON');
+db.exec('PRAGMA journal_mode = WAL');
+db.exec('PRAGMA foreign_keys = ON');
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
