@@ -25,6 +25,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     : `<p class="muted">${escapeHtml(t('item.loginToContact'))}
          <a href="/login.html?next=${encodeURIComponent(location.pathname + location.search)}">${escapeHtml(t('nav.login'))}</a></p>`;
 
+  const isAdmin = user && user.role === 'admin';
+  const messageBtn = Auth.loggedIn && !isOwner
+    ? `<div class="actions"><a class="btn" href="/messages.html?item=${item.id}&with=${item.user_id}">${escapeHtml(t('item.message'))}</a>
+         ${isAdmin ? `<button type="button" class="btn btn-danger" id="adminDeleteBtn">${escapeHtml(t('item.adminDelete'))}</button>` : ''}</div>`
+    : '';
+
   const ownerActions = isOwner
     ? `<div class="actions">
          <a class="btn btn-ghost" href="/new.html?edit=${item.id}">${escapeHtml(t('item.edit'))}</a>
@@ -52,9 +58,21 @@ document.addEventListener('DOMContentLoaded', async () => {
       <p class="description">${item.description ? escapeHtml(item.description) : `<span class="muted">${escapeHtml(t('item.noDescription'))}</span>`}</p>
       <h2>${escapeHtml(t('item.contact'))}</h2>
       ${contact}
+      ${messageBtn}
       ${ownerActions}
     </div>`;
   box.hidden = false;
+
+  loadSimilar(item);
+
+  const adminDelete = document.getElementById('adminDeleteBtn');
+  if (adminDelete) adminDelete.addEventListener('click', async () => {
+    if (!confirm(t('admin.confirmDeleteItem'))) return;
+    try {
+      await api(`/admin/items/${item.id}`, { method: 'DELETE' });
+      location.href = '/admin.html';
+    } catch (err) { showAlert(alertBox, errorText(err)); }
+  });
 
   if (!isOwner) return;
 
@@ -73,3 +91,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (err) { showAlert(alertBox, errorText(err)); }
   });
 });
+
+// O'xshash e'lonlar: yo'qolgan buyum uchun topilganlar va aksincha
+async function loadSimilar(item) {
+  if (item.status !== 'active') return;
+  try {
+    const { items } = await api(`/items/${item.id}/similar`);
+    if (!items.length) return;
+    const section = document.getElementById('similar');
+    section.querySelector('h2').textContent = t(item.type === 'lost' ? 'item.similarFound' : 'item.similarLost');
+    section.querySelector('.grid').innerHTML = items.map(itemCard).join('');
+    section.hidden = false;
+  } catch { /* ignore */ }
+}

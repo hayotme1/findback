@@ -29,7 +29,9 @@ function renderHeader() {
     `<a href="${href}" class="${here.endsWith(href) ? 'active' : ''}">${escapeHtml(t(key))}</a>`;
 
   const authLinks = Auth.loggedIn
-    ? `${link('/profile.html', 'nav.profile')}
+    ? `<a href="/messages.html" class="${here.endsWith('/messages.html') ? 'active' : ''}">${escapeHtml(t('nav.messages'))}<span class="nav-badge" id="unreadBadge" hidden></span></a>
+       ${user && user.role === 'admin' ? link('/admin.html', 'nav.admin') : ''}
+       ${link('/profile.html', 'nav.profile')}
        <button type="button" class="linklike" id="logoutBtn">${escapeHtml(t('nav.logout'))}</button>`
     : `${link('/login.html', 'nav.login')}
        <a href="/register.html" class="btn btn-sm">${escapeHtml(t('nav.register'))}</a>`;
@@ -62,6 +64,28 @@ function renderHeader() {
   });
 
   if (user) header.querySelector('.nav').title = user.full_name;
+  if (Auth.loggedIn) refreshSession(header);
+}
+
+// Foydalanuvchi ma'lumotlarini (masalan, admin roli) yangilaydi va o'qilmagan xabarlarni ko'rsatadi
+async function refreshSession(header) {
+  try {
+    const { user } = await api('/auth/me');
+    const before = Auth.user;
+    Auth.save(Auth.token, user);
+    if (!before || before.role !== user.role) { header.remove(); document.querySelector('.site-footer')?.remove(); renderHeader(); renderFooter(); return; }
+  } catch { return; }
+  updateUnreadBadge();
+}
+
+async function updateUnreadBadge() {
+  const badge = document.getElementById('unreadBadge');
+  if (!badge) return;
+  try {
+    const { unread } = await api('/messages/unread');
+    badge.textContent = unread > 99 ? '99+' : unread;
+    badge.hidden = unread === 0;
+  } catch { /* ignore */ }
 }
 
 function renderFooter() {

@@ -11,6 +11,9 @@ Sayt o'zbek va ingliz tillarida ishlaydi.
 - E'lon sahifasida egasining aloqa ma'lumotlari (faqat tizimga kirganlar uchun)
 - O'z e'lonini tahrirlash, o'chirish, "hal qilindi" deb belgilash
 - Shaxsiy kabinet
+- **Sayt ichida xabar yozish (chat)**: e'lon egasi bilan to'g'ridan-to'g'ri yozishish, o'qilmagan xabarlar soni menyuda
+- **O'xshash e'lonlar**: yo'qolgan buyum sahifasida unga mos topilgan e'lonlar (va aksincha) avtomatik ko'rsatiladi
+- **Admin panel**: statistika, barcha e'lonlar va foydalanuvchilarni boshqarish (o'chirish, admin qilish)
 - UZ / EN til almashtirish, telefon uchun moslashgan dizayn, qorong'i rejim
 
 ## Texnologiyalar
@@ -36,12 +39,23 @@ Brauzerda oching: http://localhost:3000
 
 Kod o'zgarganda server avtomatik qayta ishga tushishi uchun: `npm run dev`.
 
+### Admin qilish
+
+Avval saytda oddiy ro'yxatdan o'ting, keyin terminalda:
+
+```bash
+npm run make-admin -- sizning@email.uz
+```
+
+Saytdan chiqib, qayta kiring — menyuda **Admin** bo'limi paydo bo'ladi.
+
 ### Sozlamalar (ixtiyoriy)
 
 | O'zgaruvchi | Vazifasi | Standart qiymat |
 |---|---|---|
 | `PORT` | Server porti | `3000` |
 | `JWT_SECRET` | Tokenlar uchun maxfiy kalit (internetga joylashda **albatta** o'rnating) | dev kalit |
+| `ADMIN_EMAIL` | Shu email egasi avtomatik admin bo'ladi | — |
 | `DB_PATH` | Ma'lumotlar bazasi fayli | `data/findback.db` |
 
 ## Loyiha tuzilmasi
@@ -56,11 +70,17 @@ findback/
 │   └── upload.js        # Rasm yuklash (multer)
 ├── routes/
 │   ├── auth.js          # /api/auth — ro'yxatdan o'tish, kirish
-│   └── items.js         # /api/items — e'lonlar
+│   ├── items.js         # /api/items — e'lonlar va o'xshash e'lonlar
+│   ├── messages.js      # /api/messages — chat
+│   └── admin.js         # /api/admin — admin panel
+├── scripts/
+│   └── make-admin.js    # Foydalanuvchini admin qilish
 ├── public/              # Frontend
 │   ├── index.html       # Bosh sahifa: e'lonlar ro'yxati
 │   ├── item.html        # Bitta e'lon
 │   ├── new.html         # E'lon joylash / tahrirlash
+│   ├── messages.html    # Xabarlar (chat)
+│   ├── admin.html       # Admin panel
 │   ├── login.html, register.html, profile.html
 │   ├── css/style.css
 │   └── js/
@@ -87,5 +107,13 @@ findback/
 | PUT | `/api/items/:id` | Tahrirlash 🔒 (faqat egasi) |
 | PATCH | `/api/items/:id/status` | `active` / `resolved` 🔒 (faqat egasi) |
 | DELETE | `/api/items/:id` | O'chirish 🔒 (faqat egasi) |
+| GET | `/api/items/:id/similar` | O'xshash e'lonlar |
+| GET | `/api/messages` | Suhbatlar ro'yxati 🔒 |
+| GET | `/api/messages/unread` | O'qilmagan xabarlar soni 🔒 |
+| GET | `/api/messages/thread?item=&with=` | Bitta suhbat 🔒 |
+| POST | `/api/messages` | Xabar yuborish `{ item_id, recipient_id, body }` 🔒 |
+| GET | `/api/admin/stats`, `/api/admin/items`, `/api/admin/users` | Admin ma'lumotlari 🛡 |
+| DELETE | `/api/admin/items/:id`, `/api/admin/users/:id` | Admin o'chirishi 🛡 |
+| PATCH | `/api/admin/users/:id/role` | Rolni o'zgartirish `{ role }` 🛡 |
 
-🔒 — `Authorization: Bearer <token>` sarlavhasi kerak.
+🔒 — `Authorization: Bearer <token>` sarlavhasi kerak. 🛡 — faqat adminlar uchun.

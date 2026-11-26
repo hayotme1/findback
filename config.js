@@ -12,4 +12,6 @@ module.exports = {
   JWT_EXPIRES_IN: '7d',
   CATEGORIES: ['electronics', 'documents', 'keys', 'bags', 'clothing', 'accessories', 'books', 'other'],
   MAX_IMAGE_SIZE: 5 * 1024 * 1024, // 5 MB
+  // Shu email bilan ro'yxatdan o'tgan foydalanuvchi avtomatik admin bo'ladi
+  ADMIN_EMAIL: (process.env.ADMIN_EMAIL || '').trim().toLowerCase(),
 };

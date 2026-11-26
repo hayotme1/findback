@@ -1,6 +1,10 @@
 const path = require('path');
 const express = require('express');
-const { PORT, CATEGORIES } = require('./config');
+const { PORT, CATEGORIES, ADMIN_EMAIL } = require('./config');
+const db = require('./db');
+
+// ADMIN_EMAIL berilgan bo'lsa, o'sha foydalanuvchini admin qilamiz
+if (ADMIN_EMAIL) db.prepare("UPDATE users SET role = 'admin' WHERE email = ?").run(ADMIN_EMAIL);
 
 const app = express();
 
@@ -15,6 +19,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.get('/api/categories', (req, res) => res.json({ categories: CATEGORIES }));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/items', require('./routes/items'));
+app.use('/api/messages', require('./routes/messages'));
+app.use('/api/admin', require('./routes/admin'));
 
 app.use('/api', (req, res) => res.status(404).json({ error: 'not_found' }));
 

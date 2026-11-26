@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../config');
+const db = require('../db');
 
 // Tokenni tekshiradi. Token bo'lmasa yoki noto'g'ri bo'lsa 401 qaytaradi.
 function requireAuth(req, res, next) {
@@ -16,4 +17,11 @@ function requireAuth(req, res, next) {
   }
 }
 
-module.exports = { requireAuth };
+// Faqat adminlar uchun (requireAuth dan keyin ishlatiladi)
+function requireAdmin(req, res, next) {
+  const user = db.prepare('SELECT role FROM users WHERE id = ?').get(req.user.id);
+  if (!user || user.role !== 'admin') return res.status(403).json({ error: 'forbidden' });
+  next();
+}
+
+module.exports = { requireAuth, requireAdmin };

@@ -2,14 +2,14 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../db');
-const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config');
+const { JWT_SECRET, JWT_EXPIRES_IN, ADMIN_EMAIL } = require('../config');
 const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function publicUser(u) {
-  return { id: u.id, full_name: u.full_name, email: u.email, phone: u.phone, faculty: u.faculty, created_at: u.created_at };
+  return { id: u.id, full_name: u.full_name, email: u.email, phone: u.phone, faculty: u.faculty, role: u.role, created_at: u.created_at };
 }
 
 function makeToken(user) {
@@ -34,8 +34,8 @@ router.post('/register', (req, res) => {
 
   const hash = bcrypt.hashSync(password, 10);
   const info = db
-    .prepare('INSERT INTO users (full_name, email, password_hash, phone, faculty) VALUES (?, ?, ?, ?, ?)')
-    .run(full_name, email, hash, phone, faculty);
+    .prepare('INSERT INTO users (full_name, email, password_hash, phone, faculty, role) VALUES (?, ?, ?, ?, ?, ?)')
+    .run(full_name, email, hash, phone, faculty, ADMIN_EMAIL && email === ADMIN_EMAIL ? 'admin' : 'user');
 
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(info.lastInsertRowid);
   res.status(201).json({ token: makeToken(user), user: publicUser(user) });

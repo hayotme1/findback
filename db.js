@@ -37,6 +37,26 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_items_category ON items(category);
   CREATE INDEX IF NOT EXISTS idx_items_status   ON items(status);
   CREATE INDEX IF NOT EXISTS idx_items_user     ON items(user_id);
+
+  CREATE TABLE IF NOT EXISTS messages (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    item_id      INTEGER NOT NULL REFERENCES items(id) ON DELETE CASCADE,
+    sender_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    recipient_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    body         TEXT    NOT NULL,
+    read_at      TEXT,
+    created_at   TEXT    NOT NULL DEFAULT (datetime('now'))
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_messages_recipient ON messages(recipient_id, read_at);
+  CREATE INDEX IF NOT EXISTS idx_messages_sender    ON messages(sender_id);
+  CREATE INDEX IF NOT EXISTS idx_messages_item      ON messages(item_id);
 `);
+
+// Eski bazalar uchun: users jadvaliga "role" ustunini qo'shamiz (user | admin)
+const userColumns = db.prepare('PRAGMA table_info(users)').all().map((c) => c.name);
+if (!userColumns.includes('role')) {
+  db.exec("ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT 'user'");
+}
 
 module.exports = db;

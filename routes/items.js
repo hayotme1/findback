@@ -84,6 +84,52 @@ router.get('/mine', requireAuth, (req, res) => {
   res.json({ items });
 });
 
+// Matnni so'zlarga ajratadi (3 harfdan uzunlari, kichik harflarda)
+function words(text) {
+  return new Set(String(text || '').toLowerCase().split(/[^\p{L}\p{N}]+/u).filter((w) => w.length >= 3));
+}
+function overlap(a, b) {
+  let n = 0;
+  for (const w of a) if (b.has(w)) n++;
+  return n;
+}
+
+// GET /api/items/:id/similar — qarama-qarshi turdagi (yo'qolgan ↔ topilgan) o'xshash e'lonlar
+router.get('/:id/similar', (req, res) => {
+  const item = db.prepare('SELECT * FROM items WHERE id = ?').get(req.params.id);
+  if (!item) return res.status(404).json({ error: 'not_found' });
+
+  const candidates = db.prepare(`${SELECT_ITEM}
+    WHERE i.type = ? AND i.status = 'active' AND i.user_id != ?
+    ORDER BY i.created_at DESC LIMIT 300`).all(item.type === 'lost' ? 'found' : 'lost', item.user_id);
+
+  const title = words(item.title);
+  const desc = words(item.description);
+  const loc = words(item.location);
+  const day = 24 * 60 * 60 * 1000;
+  const itemTime = Date.parse(item.event_date);
+
+  const scored = candidates.map((c) => {
+    const cTitle = words(c.title);
+    const cDesc = words(c.description);
+    let score = 0;
+    if (c.category === item.category) score += 3;
+    score += 3 * overlap(title, cTitle);
+    score += overlap(title, cDesc) + overlap(desc, cTitle) + overlap(desc, cDesc);
+    score += 2 * overlap(loc, words(c.location));
+    const days = Math.abs(Date.parse(c.event_date) - itemTime) / day;
+    if (days <= 7) score += 2; else if (days <= 30) score += 1;
+    return { ...c, score };
+  });
+
+  // Yetarlicha o'xshashlarini qoldiramiz (kategoriya, umumiy so'zlar, yaqin sana)
+  const items = scored
+    .filter((c) => c.score >= 4)
+    .sort((a, b) => b.score - a.score || b.id - a.id)
+    .slice(0, 4);
+  res.json({ items });
+});
+
 // GET /api/items/:id — bitta e'lon (egasining aloqa ma'lumotlari bilan)
 router.get('/:id', (req, res) => {
   const item = db.prepare(`

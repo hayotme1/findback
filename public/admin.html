@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FindBack</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232563eb'/><text x='16' y='23' font-size='20' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>F</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/i18n.js" defer></script>
+  <script src="/js/api.js" defer></script>
+  <script src="/js/ui.js" defer></script>
+  <script src="/js/pages/admin.js" defer></script>
+</head>
+<body>
+  <main class="container">
+    <h1 class="page-title" data-i18n="admin.title"></h1>
+    <div id="alert" hidden></div>
+    <div class="admin-stats" id="adminStats" hidden>
+      <div class="stat"><strong data-k="users">–</strong><span data-i18n="admin.users"></span></div>
+      <div class="stat"><strong data-k="items">–</strong><span data-i18n="admin.items"></span></div>
+      <div class="stat"><strong data-k="lost">–</strong><span data-i18n="stats.lost"></span></div>
+      <div class="stat"><strong data-k="found">–</strong><span data-i18n="stats.found"></span></div>
+      <div class="stat"><strong data-k="resolved">–</strong><span data-i18n="stats.resolved"></span></div>
+      <div class="stat"><strong data-k="messages">–</strong><span data-i18n="admin.messages"></span></div>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button type="button" class="tab on" data-tab="items" data-i18n="admin.items"></button>
+      <button type="button" class="tab" data-tab="users" data-i18n="admin.users"></button>
+      <input type="search" id="adminSearch" data-i18n-placeholder="admin.search" aria-label="Search">
+    </div>
+    <div class="table-wrap" id="tableWrap"></div>
+  </main>
+</body>
+</html>

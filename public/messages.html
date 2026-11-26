@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FindBack</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232563eb'/><text x='16' y='23' font-size='20' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>F</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/i18n.js" defer></script>
+  <script src="/js/api.js" defer></script>
+  <script src="/js/ui.js" defer></script>
+  <script src="/js/pages/messages.js" defer></script>
+</head>
+<body>
+  <main class="container">
+    <h1 class="page-title" data-i18n="msg.title"></h1>
+    <div id="alert" hidden></div>
+    <div class="chat" id="chat">
+      <aside class="chat-list" id="chatList"></aside>
+      <section class="chat-thread" id="thread">
+        <p class="chat-placeholder muted" data-i18n="msg.select"></p>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
