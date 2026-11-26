@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FindBack</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232563eb'/><text x='16' y='23' font-size='20' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>F</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/i18n.js" defer></script>
+  <script src="/js/api.js" defer></script>
+  <script src="/js/ui.js" defer></script>
+  <script src="/js/pages/index.js" defer></script>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1 data-i18n="hero.title"></h1>
+        <p data-i18n="hero.subtitle"></p>
+        <div class="hero-actions">
+          <a href="/new.html?type=lost" class="btn btn-lost" data-i18n="hero.lost"></a>
+          <a href="/new.html?type=found" class="btn btn-found" data-i18n="hero.found"></a>
+        </div>
+        <div class="stats">
+          <div class="stat"><strong id="statLost">–</strong><span data-i18n="stats.lost"></span></div>
+          <div class="stat"><strong id="statFound">–</strong><span data-i18n="stats.found"></span></div>
+          <div class="stat"><strong id="statResolved">–</strong><span data-i18n="stats.resolved"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <form id="filters" class="filters">
+        <input type="search" name="q" data-i18n-placeholder="filter.search" aria-label="Search">
+        <select name="type" aria-label="Type">
+          <option value="" data-i18n="filter.allTypes"></option>
+          <option value="lost" data-i18n="type.lost"></option>
+          <option value="found" data-i18n="type.found"></option>
+        </select>
+        <select name="category" id="categorySelect" aria-label="Category">
+          <option value="" data-i18n="filter.allCategories"></option>
+        </select>
+        <select name="status" aria-label="Status">
+          <option value="active" data-i18n="filter.active"></option>
+          <option value="resolved" data-i18n="filter.resolved"></option>
+        </select>
+        <button type="submit" class="btn" data-i18n="filter.submit"></button>
+      </form>
+
+      <div id="grid" class="grid"></div>
+      <p id="empty" class="empty" data-i18n="list.empty" hidden></p>
+      <div id="pager" class="pager" hidden>
+        <button type="button" class="btn btn-ghost" id="prevBtn" data-i18n="list.prev"></button>
+        <span id="pageInfo"></span>
+        <button type="button" class="btn btn-ghost" id="nextBtn" data-i18n="list.next"></button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

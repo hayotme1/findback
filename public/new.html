@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FindBack</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232563eb'/><text x='16' y='23' font-size='20' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>F</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/i18n.js" defer></script>
+  <script src="/js/api.js" defer></script>
+  <script src="/js/ui.js" defer></script>
+  <script src="/js/pages/new.js" defer></script>
+</head>
+<body>
+  <main class="container narrow">
+    <div class="panel">
+      <h1 id="formTitle" data-i18n="form.newTitle"></h1>
+      <div id="alert" hidden></div>
+      <form id="itemForm" class="form" novalidate>
+        <fieldset class="type-toggle">
+          <legend data-i18n="form.type"></legend>
+          <label><input type="radio" name="type" value="lost" checked><span data-i18n="type.lost"></span></label>
+          <label><input type="radio" name="type" value="found"><span data-i18n="type.found"></span></label>
+        </fieldset>
+        <label><span data-i18n="form.title"></span>
+          <input name="title" required maxlength="120" data-i18n-placeholder="form.titlePh"></label>
+        <label><span data-i18n="form.category"></span>
+          <select name="category" id="categorySelect" required></select></label>
+        <div class="row">
+          <label><span data-i18n="form.location"></span>
+            <input name="location" required maxlength="200" data-i18n-placeholder="form.locationPh"></label>
+          <label><span data-i18n="form.date"></span>
+            <input name="event_date" type="date" required></label>
+        </div>
+        <label><span data-i18n="form.description"></span>
+          <textarea name="description" rows="4" maxlength="2000" data-i18n-placeholder="form.descriptionPh"></textarea></label>
+        <label><span data-i18n="form.image"></span>
+          <input name="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label>
+        <div id="currentImage" class="current-image" hidden>
+          <img alt="">
+          <label class="check"><input type="checkbox" name="remove_image" value="1"><span data-i18n="form.removeImage"></span></label>
+        </div>
+        <button type="submit" class="btn btn-block" data-i18n="form.submit"></button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>
